@@ -1,0 +1,22 @@
+<?php
+session_start();
+if(isset($_SESSION['userid']))
+{
+    ?>
+        <script>
+            alert("Loged out");
+            window.location="index.php";
+        </script>
+    <?php
+}
+else
+{
+    ?>
+        <script>
+            window.location="my-account.php";
+        </script>
+    <?php
+}
+session_unset();
+session_destroy();
+?>
