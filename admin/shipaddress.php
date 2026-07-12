@@ -227,15 +227,15 @@
                                                         {
                                                     ?>
                                                       <tr>
-                                                            <td><?php echo $row['customer_id'];?></td>
-                                                            <td><?php echo $row['name'];?></td>
-                                                            <td><?php echo $row['email'];?></td>
-                                                            <td><?php echo $row['mobile'];?></td>
-                                                            <td><?php echo $row['address'];?></td>
-                                                            <td><?php echo $row['country'];?></td>
-                                                            <td><?php echo $row['state'];?></td>
-                                                            <td><?php echo $row['city'];?></td>
-                                                            <td><?php echo $row['zipcode'];?></td>
+                                                            <td><?php echo htmlspecialchars($row['customer_id']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['name']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['email']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['mobile']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['address']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['country']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['state']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['city']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['zipcode']);?></td>
                                                       </tr>
                                                       <?php
                                                         }

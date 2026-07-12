@@ -164,20 +164,26 @@
                         if(isset($_GET['category']))
                         {
                               $category=$_GET['category'];
-                              $result=mysqli_query($con,"select * from product where category='$category'")
-                              or die("Failed to login".mysql_error());
+                              $stmt=mysqli_prepare($con,"select * from product where category=?");
+                              mysqli_stmt_bind_param($stmt,"s",$category);
+                              mysqli_stmt_execute($stmt);
+                              $result=mysqli_stmt_get_result($stmt);
                         }
                         else if(isset($_GET['brand']))
                         {
                               $brand=$_GET['brand'];
-                              $result=mysqli_query($con,"select * from product where brand='$brand'")
-                              or die("Failed to login".mysql_error());
+                              $stmt=mysqli_prepare($con,"select * from product where brand=?");
+                              mysqli_stmt_bind_param($stmt,"s",$brand);
+                              mysqli_stmt_execute($stmt);
+                              $result=mysqli_stmt_get_result($stmt);
                         }
                         else if(isset($_GET['build_type']))
                         {
                               $build_type=$_GET['build_type'];
-                              $result=mysqli_query($con,"select * from product where build_type='$build_type'")
-                              or die("Failed to login".mysql_error());
+                              $stmt=mysqli_prepare($con,"select * from product where build_type=?");
+                              mysqli_stmt_bind_param($stmt,"s",$build_type);
+                              mysqli_stmt_execute($stmt);
+                              $result=mysqli_stmt_get_result($stmt);
                         }
                         else if(isset($_GET['search']))
                         {
@@ -185,16 +191,19 @@
                               $low=10;
                               $high=20;
                               ?>
-                                    <script>document.getElementById("search").value="<?php echo $search;?>";</script>
+                                    <script>document.getElementById("search").value=<?php echo json_encode($search);?>;</script>
                               <?php
-                              $result=mysqli_query($con,"select * from product where name like '%$search%' or description like '%$search%' or brand like '%$search%' or category like '%$search%' or build_type like '%$search%'")
-                              or die("Failed to login".mysql_error());
+                              $likeSearch="%".$search."%";
+                              $stmt=mysqli_prepare($con,"select * from product where name like ? or description like ? or brand like ? or category like ? or build_type like ?");
+                              mysqli_stmt_bind_param($stmt,"sssss",$likeSearch,$likeSearch,$likeSearch,$likeSearch,$likeSearch);
+                              mysqli_stmt_execute($stmt);
+                              $result=mysqli_stmt_get_result($stmt);
                         }
                         else if(isset($_GET['sort']))
                         {
                               $sort=$_GET['sort'];
                               ?>
-                                    <script>document.getElementById("sort").innerHTML="<?php echo $sort;?>";</script>
+                                    <script>document.getElementById("sort").innerHTML=<?php echo json_encode($sort);?>;</script>
                               <?php
                               if($_GET['sort']=="Newest")
                               {
@@ -216,18 +225,20 @@
                         {
                               $low=$_GET['low'];
                               $high=$_GET['high'];
-                              $result=mysqli_query($con,"select * from product where price between '$low' and '$high'")
-                              or die("Failed to login".mysql_error());
+                              $stmt=mysqli_prepare($con,"select * from product where price between ? and ?");
+                              mysqli_stmt_bind_param($stmt,"ii",$low,$high);
+                              mysqli_stmt_execute($stmt);
+                              $result=mysqli_stmt_get_result($stmt);
                               if($high==9999999)
                               {
                                     ?>
-                                          <script>document.getElementById("range").innerHTML=" ₹"+<?php echo $low;?>+" <";</script>
+                                          <script>document.getElementById("range").innerHTML=" ₹"+<?php echo json_encode($low);?>+" <";</script>
                                     <?php
                               }
                               else
                               {
                               ?>
-                                    <script>document.getElementById("range").innerHTML=" ₹"+<?php echo $low;?>+" to  ₹"+<?php echo $high;?>;</script>
+                                    <script>document.getElementById("range").innerHTML=" ₹"+<?php echo json_encode($low);?>+" to  ₹"+<?php echo json_encode($high);?>;</script>
                               <?php
                               }
                         }
@@ -247,7 +258,7 @@
                                     <div class="col-md-4">
                                           <div class="product-item">
                                                 <div class="product-title">
-                                                      <a href="product-detail.php?product_id=<?php echo $row['product_id']; ?>"><?php echo $row['name']; ?></a>
+                                                      <a href="product-detail.php?product_id=<?php echo htmlspecialchars($row['product_id']); ?>"><?php echo htmlspecialchars($row['name']); ?></a>
                                                       <div class="ratting">
                                                             <i class="fa fa-star"></i>
                                                             <i class="fa fa-star"></i>
@@ -258,16 +269,16 @@
                                                 </div>
                                                 <div class="product-image">
                                                       <a href="product-detail.html">
-                                                            <img src="<?php echo $row['image1']; ?>" alt="Product Image" width="100%" height="325px">
+                                                            <img src="<?php echo htmlspecialchars($row['image1']); ?>" alt="Product Image" width="100%" height="325px">
                                                       </a>
                                                       <div class="product-action">
-                                                            <a href="addcart.php?product_id=<?php echo $row['product_id'];?>&location=1"><i class="fa fa-cart-plus"></i></a>
-                                                            <a href="add-wishlist.php?product_id=<?php echo $row['product_id'];?>"><i class="fa fa-heart"></i></a>
+                                                            <a href="addcart.php?product_id=<?php echo htmlspecialchars($row['product_id']);?>&location=1"><i class="fa fa-cart-plus"></i></a>
+                                                            <a href="add-wishlist.php?product_id=<?php echo htmlspecialchars($row['product_id']);?>"><i class="fa fa-heart"></i></a>
                                                             <!-- <a href="#"><i class="fa fa-search"></i></a> -->
                                                       </div>
                                                 </div>
                                                 <div class="product-price">
-                                                      <h3><span>₹</span> <?php echo $row['price']; ?></h3>
+                                                      <h3><span>₹</span> <?php echo htmlspecialchars($row['price']); ?></h3>
                                                       <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
                                                 </div>
                                           </div>

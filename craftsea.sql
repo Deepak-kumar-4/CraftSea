@@ -57,13 +57,6 @@ CREATE TABLE `contactus` (
   `message` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `contactus`
---
-
-INSERT INTO `contactus` (`name`, `email`, `subject`, `message`) VALUES
-('Jerold', 'jerold@gmail.com', 'Bug', 'When I clicked my account page it was re-directed to checkout page');
-
 -- --------------------------------------------------------
 
 --
@@ -72,7 +65,7 @@ INSERT INTO `contactus` (`name`, `email`, `subject`, `message`) VALUES
 
 CREATE TABLE `customer` (
   `customer_id` int(11) NOT NULL,
-  `password` int(11) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `name` varchar(50) NOT NULL,
   `address` varchar(100) NOT NULL,
   `phone_no` bigint(12) NOT NULL,
@@ -85,11 +78,8 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`customer_id`, `password`, `name`, `address`, `phone_no`, `email`, `dob`) VALUES
-(560, 560, 'Jacob', 'Male', 2147483647, 'jacob@gmail.com', '2001-01-07'),
-(651, 12345, 'Jerold', 'HBR Layout Bangalore 560045', 8865942784, 'jerold@gmail.com', '2001-07-07'),
-(652, 652, 'Deepak', 'Male', 1963254875, 'deepak@gmail.com', '2023-06-13'),
-(654, 123, 'kumar', 'palace', 2653489751, 'xaben10476@ingfix.com', '2023-06-02'),
-(656, 1234, 'Jero', 'sdfgh', 1234567890, 'bopacef487@mannawo.com', '2023-06-22');
+(1, '$2y$10$hFKPwD.G5ftniK/yihFL8eRs7rXbmESmtvMZk0C7.CoxWgbVp7co.', 'Test User', '123 Demo Street', 9999999999, 'test@example.com', '2000-01-01'),
+(2, '$2y$10$fnKMsMWnEBreS/Cng7oe/ulQZ/LuO4./2ZlbYNEAdu.yi1CnyC4Wy', 'Demo User', '456 Sample Avenue', 8888888888, 'demo@example.com', '1999-05-15');
 
 -- --------------------------------------------------------
 
@@ -102,14 +92,6 @@ CREATE TABLE `newsletters` (
   `customer_id` int(11) NOT NULL,
   `name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `newsletters`
---
-
-INSERT INTO `newsletters` (`email`, `customer_id`, `name`) VALUES
-('jerold@gmail.com', 651, 'Jerold'),
-('deepak@gmail.com', 652, '');
 
 -- --------------------------------------------------------
 
@@ -136,21 +118,6 @@ CREATE TABLE `orders` (
   `zipcode` int(11) NOT NULL,
   `reason` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`order_id`, `customer_id`, `image`, `product_name`, `price`, `quantity`, `address`, `order_date`, `status`, `name`, `email`, `mobile`, `country`, `state`, `city`, `zipcode`, `reason`) VALUES
-(1, 651, 'img/Featured2.jpg', 'Sacred Lotus - Bell Hanging', 299, 1, 'HBR Layout', '2023-07-04', 'Order Delivered', 'jerold', 'jerold@gmail.com', 1234567890, 'India', 'Karnataka', 'Bangalor', 560078, ''),
-(3, 651, 'img/Featured3.jpg', 'Silver Oxidised Earrings', 399, 4, 'HRSH Layout', '2023-07-02', 'Order Confirmed', 'Deepak', 'deepak@gmail.com', 123456789, 'India', 'Karnataka', 'Bangalore', 560001, ''),
-(4, 652, 'img/Featured2.jpg', 'Sacred Lotus - Bell Hanging', 299, 1, 'ECR', '2023-01-10', 'Order Delivered', 'Deepak', 'deepak@gmail.com', 6532147895, 'India', 'Tamil Nadu', 'Chennai', 570005, ''),
-(5, 651, 'img/Featured3.jpg', 'Silver Oxidised Earrings', 399, 1, 'Rayapuram', '2023-02-14', 'Order Confirmed', 'Ayesha', 'Ayesha@gmail.com', 3526154278, 'India', 'Tamil Nadu', 'Chennai', 570008, ''),
-(6, 651, 'img/recent2.jpg', 'Silver Oxidised Ring', 549, 3, 'Pulianthope', '2023-03-10', 'Out for Delivery', 'Jerold', 'jerold@gmail.com', 9656231788, 'India', 'Tamil Nadu', 'Chennai', 570001, ''),
-(7, 651, 'img/Featured5.jpg', 'Floral Traces - Oxidised Ring', 599, 3, 'Andheri', '2023-04-12', 'Order Cancelled', 'Jerold', 'jerold@gmail.com', 6598351248, 'India', 'Maharashtra', 'Mumbai', 430026, ''),
-(8, 652, 'img/recent5.jpg', 'Handpainted Earrings', 599, 4, 'Andheri west', '2023-05-17', 'Order Picked Up', 'Deepak', 'deepak@gmail.com', 5689487511, 'India', 'Maharashtra', 'Mumbai', 460036, ''),
-(9, 561, 'img/recent4.jpg', 'Enamel Earrings', 749, 4, 'Kasturi Nagar', '2023-06-08', 'Order Delivered', 'Jerold', 'jerold@gmail.com', 2356897415, 'India', 'Karnataka', 'Bangalore', 560023, ''),
-(23, 652, 'img/TibetanMask.png', 'Tibetan Mask - Wall Frame', 999, 1, 'HBR Layout', '2023-07-24', 'Order Picked Up', 'Jerold A', 'jerold@gmail.com', 1234567890, 'India', 'Tamil Nadu', 'Chennai', 480012, '');
 
 -- --------------------------------------------------------
 
@@ -249,13 +216,13 @@ ALTER TABLE `product`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=658;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `product`

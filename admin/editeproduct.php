@@ -12,20 +12,28 @@ if(isset($_GET['productname']))
         if($_GET['image1']!=NULL)
         {
             $image1="img/".$_GET['image1'];
-            $result=mysqli_query($con,"UPDATE product SET image1='$image1' WHERE product_id='$product_id'");
+            $stmt=mysqli_prepare($con,"UPDATE product SET image1=? WHERE product_id=?");
+            mysqli_stmt_bind_param($stmt,"si",$image1,$product_id);
+            mysqli_stmt_execute($stmt);
         }
         if($_GET['image2']!=NULL)
         {
             $image2="img/".$_GET['image2'];
-            $result=mysqli_query($con,"UPDATE product SET image2='$image2' WHERE product_id='$product_id'");
+            $stmt=mysqli_prepare($con,"UPDATE product SET image2=? WHERE product_id=?");
+            mysqli_stmt_bind_param($stmt,"si",$image2,$product_id);
+            mysqli_stmt_execute($stmt);
         }
         if($_GET['image3']!=NULL)
         {
             $image3="img/".$_GET['image3'];
-            $result=mysqli_query($con,"UPDATE product SET image3='$image3' WHERE product_id='$product_id'");
+            $stmt=mysqli_prepare($con,"UPDATE product SET image3=? WHERE product_id=?");
+            mysqli_stmt_bind_param($stmt,"si",$image3,$product_id);
+            mysqli_stmt_execute($stmt);
         }
     $specification=$_GET['specification'];
-    $result=mysqli_query($con,"UPDATE product SET name='$productname',description='$description',specification='$specification',brand='$brand',price='$price',category='$category',build_type='$buildtype' WHERE product_id='$product_id'");
+    $stmt=mysqli_prepare($con,"UPDATE product SET name=?,description=?,specification=?,brand=?,price=?,category=?,build_type=? WHERE product_id=?");
+    mysqli_stmt_bind_param($stmt,"sssisssi",$productname,$description,$specification,$brand,$price,$category,$buildtype,$product_id);
+    mysqli_stmt_execute($stmt);
     $_GET['productname']=NULL;
     echo "<script>alert('Product Is Edited Successfuly'); window.location='productdetails.php';</script>";
     
@@ -248,7 +256,10 @@ if(isset($_GET['productname']))
                                     <h4 class="mb-4">Add Products</h4>
                                     <?php
                                         
-                                        $result=mysqli_query($con,"SELECT * FROM product WHERE product_id='$product_id'");
+                                        $stmt=mysqli_prepare($con,"SELECT * FROM product WHERE product_id=?");
+                                        mysqli_stmt_bind_param($stmt,"i",$product_id);
+                                        mysqli_stmt_execute($stmt);
+                                        $result=mysqli_stmt_get_result($stmt);
                                         while($row = mysqli_fetch_assoc($result))
                                         {
                                     ?>
@@ -256,13 +267,13 @@ if(isset($_GET['productname']))
                                             <div class="row mb-3">
                                                 <label for="product_id" class="col-sm-2 col-form-label">Product ID</label>
                                                 <div class="col-sm-10">
-                                                      <input type="text" readonly value="<?php echo $row['product_id'];?>" class="form-control" name="product_id" id="product_id">
+                                                      <input type="text" readonly value="<?php echo htmlspecialchars($row['product_id']);?>" class="form-control" name="product_id" id="product_id">
                                                 </div>
                                           </div>
                                           <div class="row mb-3">
                                                 <label for="productname" class="col-sm-2 col-form-label">Product Name</label>
                                                 <div class="col-sm-10">
-                                                      <input type="text" value="<?php echo $row['name'];?>" class="form-control" name="productname" id="productname">
+                                                      <input type="text" value="<?php echo htmlspecialchars($row['name']);?>" class="form-control" name="productname" id="productname">
                                                 </div>
                                           </div>
                                           
@@ -280,7 +291,7 @@ if(isset($_GET['productname']))
                                                 </div>
                                           </div>
                                           <script>
-                                            document.querySelector("#category").value="<?php echo $row['category'];?>";
+                                            document.querySelector("#category").value=<?php echo json_encode($row['category']);?>;
                                           </script>
                                           <div class="row mb-3">
                                                 <label for="brand" class="col-sm-2 col-form-label">Product Brand</label>
@@ -298,50 +309,50 @@ if(isset($_GET['productname']))
                                                 </div>
                                           </div>
                                           <script>
-                                            document.querySelector("#brand").value="<?php echo $row['brand'];?>";
+                                            document.querySelector("#brand").value=<?php echo json_encode($row['brand']);?>;
                                           </script>
                                           <div class="row mb-3">
                                                 <label for="description" class="col-sm-2 col-form-label">Product Description</label>
                                                 <div class="col-sm-10">
                                                       <!-- <input type="text" class="form-control" id="description" name="description"> -->
-                                                      <textarea name="description" id="description" class="form-control" cols="30" rows="5"><?php echo $row['description'];?></textarea>
+                                                      <textarea name="description" id="description" class="form-control" cols="30" rows="5"><?php echo htmlspecialchars($row['description']);?></textarea>
                                                 </div>
                                           </div>
                                           <div class="row mb-3">
                                                 <label for="specification" class="col-sm-2 col-form-label">Product Specification</label>
                                                 <div class="col-sm-10">
                                                       <!-- <input type="text" class="form-control" id="description" name="description"> -->
-                                                      <textarea name="specification" id="specification" class="form-control" cols="30" rows="5"><?php echo $row['specification'];?></textarea>
+                                                      <textarea name="specification" id="specification" class="form-control" cols="30" rows="5"><?php echo htmlspecialchars($row['specification']);?></textarea>
                                                 </div>
                                           </div>
                                           <div class="row mb-3">
                                                 <label for="price" class="col-sm-2 col-form-label">Price</label>
                                                 <div class="col-sm-10">
-                                                      <input type="number" value="<?php echo $row['price'];?>" class="form-control" id="price" name="price">
+                                                      <input type="number" value="<?php echo htmlspecialchars($row['price']);?>" class="form-control" id="price" name="price">
                                                 </div>
                                           </div>
                                           <div class="row mb-3">
                                                 <label for="buildtype" class="col-sm-2 col-form-label">Build Type</label>
                                                 <div class="col-sm-10">
-                                                      <input type="text" value="<?php echo $row['build_type'];?>" class="form-control" id="buildtype" name="buildtype">
+                                                      <input type="text" value="<?php echo htmlspecialchars($row['build_type']);?>" class="form-control" id="buildtype" name="buildtype">
                                                 </div>
                                           </div>
                                           <div class="row mb-3">
                                                 <label for="formFile1" class="col-sm-2 col-form-label">Product Image 1</label>
                                                 <div class="col-sm-10">
-                                                      <input class="form-control" value="<?php echo $row['image1'];?>" name="image1" type="file" accept="image/png, image/jpg, image/jpeg" id="formFile1">
+                                                      <input class="form-control" value="<?php echo htmlspecialchars($row['image1']);?>" name="image1" type="file" accept="image/png, image/jpg, image/jpeg" id="formFile1">
                                                 </div>
                                           </div>
                                           <div class="row mb-3">
                                                 <label for="formFile2" class="col-sm-2 col-form-label">Product Image 2</label>
                                                 <div class="col-sm-10">
-                                                      <input class="form-control" value="<?php echo $row['image2'];?>" name="image2" type="file" accept="image/png, image/jpg, image/jpeg" id="formFile2">
+                                                      <input class="form-control" value="<?php echo htmlspecialchars($row['image2']);?>" name="image2" type="file" accept="image/png, image/jpg, image/jpeg" id="formFile2">
                                                 </div>
                                           </div>
                                           <div class="row mb-3">
                                                 <label for="formFile3" class="col-sm-2 col-form-label">Product Image 3</label>
                                                 <div class="col-sm-10">
-                                                      <input class="form-control" value="<?php echo $row['image3'];?>" name="image3" type="file" accept="image/png, image/jpg, image/jpeg" id="image3">
+                                                      <input class="form-control" value="<?php echo htmlspecialchars($row['image3']);?>" name="image3" type="file" accept="image/png, image/jpg, image/jpeg" id="image3">
                                                 </div>
                                           </div>
                                           <br>

@@ -818,7 +818,10 @@ session_start();
 if(isset($_GET['newsemail']))
 {
     $email=$_GET['newsemail'];
-    $newsletter=mysqli_query($con,"select * from newsletters where email='$email'");
+    $stmt=mysqli_prepare($con,"select * from newsletters where email=?");
+    mysqli_stmt_bind_param($stmt,"s",$email);
+    mysqli_stmt_execute($stmt);
+    $newsletter=mysqli_stmt_get_result($stmt);
     $num_rows=mysqli_num_rows($newsletter);
     if($num_rows>0)
     {
@@ -830,7 +833,9 @@ if(isset($_GET['newsemail']))
     {
         $customerid=$_SESSION['userid'];
         $name=$_SESSION['username'];
-        $newsletter=mysqli_query($con,"insert into newsletters(email,customer_id,name) values('$email','$customerid','$name')");
+        $stmt=mysqli_prepare($con,"insert into newsletters(email,customer_id,name) values(?,?,?)");
+        mysqli_stmt_bind_param($stmt,"sis",$email,$customerid,$name);
+        $newsletter=mysqli_stmt_execute($stmt);
         ?>
         <script>alert("You Will Recive Email From Now On");</script>
     <?php

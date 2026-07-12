@@ -7,17 +7,23 @@
 
         //connect to database
         $con=mysqli_connect("localhost","root","","Craftsea");
-        
+
         //Query
-        $result=mysqli_query($con,"select * from customer where email='$email' and password='$pass'")
-        or die("Failed to login".mysql_error());
+        $stmt = mysqli_prepare($con, "select * from customer where email=?");
+        mysqli_stmt_bind_param($stmt, "s", $email);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $passwordMatch = false;
         while($row = mysqli_fetch_assoc($result))
         {
-            $userid=$row['customer_id'];
-            $_SESSION['username']=$row['name'];
+            if(password_verify($pass, $row['password']))
+            {
+                $userid=$row['customer_id'];
+                $_SESSION['username']=$row['name'];
+                $passwordMatch = true;
+            }
         }
-        $num_rows=mysqli_num_rows($result);
-        if($num_rows>0)
+        if($passwordMatch)
         {
         session_start();
         $_SESSION['userid']=$userid;

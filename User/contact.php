@@ -7,7 +7,9 @@ if(isset($_POST['Name']))
     $subject=$_POST['Subject'];
     $message=$_POST['Message'];
     $con=mysqli_connect("localhost","root","","Craftsea");
-    $insert=mysqli_query($con,"insert into contactus (name,email,subject,message) values('$name','$email','$subject','$message')");
+    $stmt=mysqli_prepare($con,"insert into contactus (name,email,subject,message) values(?,?,?,?)");
+    mysqli_stmt_bind_param($stmt,"ssss",$name,$email,$subject,$message);
+    mysqli_stmt_execute($stmt);
     echo "<script>alert('Your Respond is Sent');</script>";
 }
 ?>

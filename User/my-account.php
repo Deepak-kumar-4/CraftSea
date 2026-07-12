@@ -12,9 +12,10 @@ $dob="";
 if(isset($_GET['confirmpass']))
 {
     $customerID=$_SESSION['userid'];
-    $password=$_GET['confirmpass'];
-    $result=mysqli_query($con,"UPDATE customer SET password='$password' WHERE  customer_id='$customerID'")
-    or die("Failed to login".mysql_error());
+    $password=password_hash($_GET['confirmpass'], PASSWORD_DEFAULT);
+    $stmt=mysqli_prepare($con,"UPDATE customer SET password=? WHERE customer_id=?");
+    mysqli_stmt_bind_param($stmt,"si",$password,$customerID);
+    mysqli_stmt_execute($stmt);
     ?>
         <script>
             alert("Updated Successfuly");
@@ -30,8 +31,9 @@ else if(isset($_SESSION['userid']) && isset($_GET['name']))
         $name=$_GET['name'];
         $email=$_GET['email'];
         $dob=$_GET['dob'];
-        $result=mysqli_query($con,"UPDATE customer SET name='$name',address='$address',phone_no='$mobile',email='$email',dob='$dob' WHERE  customer_id='$customerID'")
-        or die("Failed to login".mysql_error());
+        $stmt=mysqli_prepare($con,"UPDATE customer SET name=?,address=?,phone_no=?,email=?,dob=? WHERE customer_id=?");
+        mysqli_stmt_bind_param($stmt,"ssissi",$name,$address,$mobile,$email,$dob,$customerID);
+        mysqli_stmt_execute($stmt);
         ?>
             <script>
                 alert("Updated Successfuly");
@@ -58,7 +60,9 @@ if(isset($_GET['orderid']))
 {
       $id=$_GET['orderid'];
       $reason=$_GET['reason'];
-      $cancle=mysqli_query($con,"UPDATE orders SET status='Order Cancelled', reason='$reason' WHERE order_id='$id'");
+      $stmt=mysqli_prepare($con,"UPDATE orders SET status='Order Cancelled', reason=? WHERE order_id=?");
+      mysqli_stmt_bind_param($stmt,"si",$reason,$id);
+      mysqli_stmt_execute($stmt);
       echo "<script>alert('Your order has been cancled');window.location='my-account.php';</script>";
 }
 ?>
@@ -276,10 +280,10 @@ if(isset($_GET['orderid']))
                                                       ?>
                                                             <tr>
                                                                   <td><?php echo $j?></td>
-                                                                  <td><?php echo $row['product_name']?></td>
-                                                                  <td><?php echo $row['order_date']?></td>
-                                                                  <td><?php echo $row['price']?></td>
-                                                                  <td><?php echo $row['status']?></td>
+                                                                  <td><?php echo htmlspecialchars($row['product_name'])?></td>
+                                                                  <td><?php echo htmlspecialchars($row['order_date'])?></td>
+                                                                  <td><?php echo htmlspecialchars($row['price'])?></td>
+                                                                  <td><?php echo htmlspecialchars($row['status'])?></td>
                                                                   <td><button class="btn" data-toggle="modal" data-target="#exampleModal<?php echo $j?>">Cancel</button></td>
                                                             </tr>
                                                             <div class="modal fade" id="exampleModal<?php echo $j?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -310,7 +314,7 @@ if(isset($_GET['orderid']))
                                                                               </div>
                                                                               <div class="modal-footer">
                                                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                                    <button type="button" class="btn btn-primary" onclick="cancel(<?php echo $row['order_id'];?>,<?php echo $j;?>)">Submit</button>
+                                                                                    <button type="button" class="btn btn-primary" onclick="cancel(<?php echo json_encode((int)$row['order_id']);?>,<?php echo json_encode($j);?>)">Submit</button>
                                                                               </div>
                                                                         </div>
                                                                   </div>
@@ -386,15 +390,15 @@ if(isset($_GET['orderid']))
                                           <div class="row">
                                                 <div class="col-md-6">
                                                       <h5>Payment Address</h5>
-                                                      <p><?php echo $address;?></p>
-                                                      <p>Mobile: <?php echo $mobile;?></p>
+                                                      <p><?php echo htmlspecialchars($address);?></p>
+                                                      <p>Mobile: <?php echo htmlspecialchars($mobile);?></p>
                                                       <!-- <button class="btn">Edit Address</button> -->
                                                       <a class="btn" id="account-nav" data-toggle="pill" href="#account-tab">Edit Address</a>
                                                 </div>
                                                 <div class="col-md-6">
                                                       <h5>Shipping Address</h5>
-                                                      <p><?php echo $address;?></p>
-                                                      <p>Mobile: <?php echo $mobile;?></p>
+                                                      <p><?php echo htmlspecialchars($address);?></p>
+                                                      <p>Mobile: <?php echo htmlspecialchars($mobile);?></p>
                                                       <a class="btn" id="account-nav" data-toggle="pill" href="#account-tab">Edit Address</a>
                                                 </div>
                                           </div>
@@ -405,23 +409,23 @@ if(isset($_GET['orderid']))
                                           <form class="row" name="updateform">
                                                 <div class="col-md-6">
                                                       <label>Name</label>
-                                                      <input class="form-control" type="text" value="<?php echo $name;?>" placeholder="First Name" name="name">
+                                                      <input class="form-control" type="text" value="<?php echo htmlspecialchars($name);?>" placeholder="First Name" name="name">
                                                 </div>
                                                 <div class="col-md-6">
                                                       <label>Date Of Birth</label>
-                                                      <input class="form-control" type="date" value="<?php echo $dob;?>" placeholder="Date Of Birth" name="dob">
+                                                      <input class="form-control" type="date" value="<?php echo htmlspecialchars($dob);?>" placeholder="Date Of Birth" name="dob">
                                                 </div>
                                                 <div class="col-md-6">
                                                       <label>Mobile</label>
-                                                      <input class="form-control" type="text" value="<?php echo $mobile;?>" placeholder="Mobile" name="mobile">
+                                                      <input class="form-control" type="text" value="<?php echo htmlspecialchars($mobile);?>" placeholder="Mobile" name="mobile">
                                                 </div>
                                                 <div class="col-md-6">
                                                       <label>Email</label>
-                                                      <input class="form-control" type="text" value="<?php echo $email;?>" placeholder="Email" name="email">
+                                                      <input class="form-control" type="text" value="<?php echo htmlspecialchars($email);?>" placeholder="Email" name="email">
                                                 </div>
                                                 <div class="col-md-12">
                                                       <label>Address</label>
-                                                      <input class="form-control" type="text" value="<?php echo $address;?>" placeholder="Address" name="address">
+                                                      <input class="form-control" type="text" value="<?php echo htmlspecialchars($address);?>" placeholder="Address" name="address">
                                                 </div>
                                                 <div class="col-md-12">
                                                       <button onclick="return update()" class="btn">Update Account</button>
@@ -432,7 +436,7 @@ if(isset($_GET['orderid']))
                                           <form class="row" name="passform">
                                                 <div class="col-md-12">
                                                       <label>Current Password</label>
-                                                      <input id="pass" class="form-control" type="password" readonly value="<?php if(isset($_SESSION['userid'])) echo $password; else echo "";?>"
+                                                      <input id="pass" class="form-control" type="password" readonly value="<?php if(isset($_SESSION['userid'])) echo htmlspecialchars($password); else echo "";?>"
                                                             placeholder="Current Password">
                                                 </div>
                                                 <div class="col-md-6">

@@ -308,12 +308,12 @@ $con=mysqli_connect("localhost","root","","Craftsea");
                                                     ?>
                                                       <tr>
                                                             <th scope="row"><?php echo $j;?></th>
-                                                            <td><img src="../<?php echo $row['image'];?>" style="width: 80px;"></td>
-                                                            <td><?php echo $row['product_name'];?></td>
-                                                            <td><?php echo $row['order_date'];?></td>
-                                                            <td><?php echo $row['price'];?></td>
+                                                            <td><img src="../<?php echo htmlspecialchars($row['image']);?>" style="width: 80px;"></td>
+                                                            <td><?php echo htmlspecialchars($row['product_name']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['order_date']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['price']);?></td>
                                                             <!-- <td>Order will be delivered by ...</td> -->
-                                                            <td><?php echo $row['address']." ".$row['state']." ".$row['city']." ".$row['zipcode'];?></td>
+                                                            <td><?php echo htmlspecialchars($row['address']." ".$row['state']." ".$row['city']." ".$row['zipcode']);?></td>
                                                             <?php if($row['status']!="Order Cancelled")
                                                             {
                                                             ?>
@@ -327,10 +327,10 @@ $con=mysqli_connect("localhost","root","","Craftsea");
                                                                         <option value="Order Delivered">Order Delivered</option>
                                                                   </select>
                                                                   <script>
-                                                                        document.querySelector("#order_status<?php echo $j;?>").value="<?php echo $row['status'];?>";
+                                                                        document.querySelector("#order_status<?php echo $j;?>").value=<?php echo json_encode($row['status']);?>;
                                                                   </script>
                                                             </td>
-                                                            <td align="center"><button class="btn btn-primary" onclick="update(<?php echo $row['order_id'];?>,<?php echo $j;?>)">Update</button></td>
+                                                            <td align="center"><button class="btn btn-primary" onclick="update(<?php echo json_encode((int)$row['order_id']);?>,<?php echo json_encode($j);?>)">Update</button></td>
                                                             <?php
                                                             }
                                                             else

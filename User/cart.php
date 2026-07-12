@@ -15,11 +15,15 @@ $customerID=$_SESSION['userid'];
 if(isset($_GET['id']))
 {
     $id=$_GET['id'];
-    $delet=mysqli_query($con,"delete from cart where product_id='$id'");
-    $result=mysqli_query($con,"select * from cart where customer_id='$customerID'")
-    or die("Failed to login".mysql_error());
+    $stmt=mysqli_prepare($con,"delete from cart where product_id=?");
+    mysqli_stmt_bind_param($stmt,"i",$id);
+    mysqli_stmt_execute($stmt);
+    $stmt=mysqli_prepare($con,"select * from cart where customer_id=?");
+    mysqli_stmt_bind_param($stmt,"i",$customerID);
+    mysqli_stmt_execute($stmt);
+    $result=mysqli_stmt_get_result($stmt);
     $_SESSION['cart']=mysqli_num_rows($result);
-    
+
 }
 
 if(isset($_GET['quantity1']))
@@ -31,14 +35,24 @@ if(isset($_GET['quantity1']))
             $getid=$_GET['product_id'.$j];
             $getquantity=$_GET['quantity'.$j];
             if($_GET['quantity'.$j]==0)
-                $delet=mysqli_query($con,"delete from cart where product_id='$getid'");
+            {
+                $stmt=mysqli_prepare($con,"delete from cart where product_id=?");
+                mysqli_stmt_bind_param($stmt,"i",$getid);
+                mysqli_stmt_execute($stmt);
+            }
             else
-                $delet=mysqli_query($con,"update cart set quantity='$getquantity' where product_id='$getid'");
+            {
+                $stmt=mysqli_prepare($con,"update cart set quantity=? where product_id=?");
+                mysqli_stmt_bind_param($stmt,"ii",$getquantity,$getid);
+                mysqli_stmt_execute($stmt);
+            }
     }
-    $result=mysqli_query($con,"select * from cart where customer_id='$customerID'")
-    or die("Failed to login".mysql_error());
+    $stmt=mysqli_prepare($con,"select * from cart where customer_id=?");
+    mysqli_stmt_bind_param($stmt,"i",$customerID);
+    mysqli_stmt_execute($stmt);
+    $result=mysqli_stmt_get_result($stmt);
     $_SESSION['cart']=mysqli_num_rows($result);
-    
+
 }
 ?>
 <!DOCTYPE html>
@@ -192,23 +206,23 @@ if(isset($_GET['quantity1']))
                                     <tr>
                                           <td>
                                                 <div class="img">
-                                                      <a href="product-detail.php?product_id=<?php echo $row['product_id'];?>"><img src="<?php echo $row['image'];?>"
+                                                      <a href="product-detail.php?product_id=<?php echo htmlspecialchars($row['product_id']);?>"><img src="<?php echo htmlspecialchars($row['image']);?>"
                                                       alt="Image"></a>
-                                                      <p><?php echo $row['name'];?></p>
+                                                      <p><?php echo htmlspecialchars($row['name']);?></p>
                                                 </div>
                                           </td>
-                                          <td>₹<?php echo $row['price'];?></td>
+                                          <td>₹<?php echo htmlspecialchars($row['price']);?></td>
                                           <td>
                                                 <div class="qty">
-                                                      <button class="btn-minus" onclick="sub(<?php echo $row['price'];?>,<?php echo $i; ?>)"><i
+                                                      <button class="btn-minus" onclick="sub(<?php echo json_encode((int)$row['price']);?>,<?php echo json_encode($i); ?>)"><i
                                                                   class="fa fa-minus"></i></button>
-                                                      <input type="text" value="<?php echo $row['quantity'];?>" id="quantity<?php echo $i; ?>">
-                                                      <button class="btn-plus" onclick="add(<?php echo $row['price'];?>,<?php echo $i; ?>)"><i
+                                                      <input type="text" value="<?php echo htmlspecialchars($row['quantity']);?>" id="quantity<?php echo $i; ?>">
+                                                      <button class="btn-plus" onclick="add(<?php echo json_encode((int)$row['price']);?>,<?php echo json_encode($i); ?>)"><i
                                                                   class="fa fa-plus"></i></button>
                                                 </div>
                                           </td>
                                           <td>₹<span id="result<?php echo $i; ?>"><?php echo $row['quantity']*$row['price'];?></span></td>
-                                          <td><a href="cart.php?id=<?php echo $row['product_id'];?>"><button><i class="fa fa-trash"></i></button></a></td>
+                                          <td><a href="cart.php?id=<?php echo htmlspecialchars($row['product_id']);?>"><button><i class="fa fa-trash"></i></button></a></td>
                                     </tr>
                                 <?php
                                 }
@@ -341,7 +355,7 @@ if(isset($_GET['quantity1']))
 
       <script>
             var sub_total=0;
-            for(var i=1;i<=<?php echo $i;?>;i++)
+            for(var i=1;i<=<?php echo json_encode($i);?>;i++)
                 {
                     sub_total+=parseInt(document.getElementById("result"+i).innerHTML);
                 }
@@ -354,7 +368,7 @@ if(isset($_GET['quantity1']))
                 var sub_total=0;
                 var values=parseInt(document.getElementById("quantity"+idname).value)+1;
                 document.getElementById("result"+idname).innerHTML=values*price;
-                for(var i=1;i<=<?php echo $i;?>;i++)
+                for(var i=1;i<=<?php echo json_encode($i);?>;i++)
                 {
                     sub_total+=parseInt(document.getElementById("result"+i).innerHTML);
                 }
@@ -371,7 +385,7 @@ if(isset($_GET['quantity1']))
                 {
                     var values=parseInt(document.getElementById("quantity"+idname).value)-1;
                     document.getElementById("result"+idname).innerHTML=values*price;
-                    for(var i=1;i<=<?php echo $i;?>;i++)
+                    for(var i=1;i<=<?php echo json_encode($i);?>;i++)
                     {
                         sub_total+=parseInt(document.getElementById("result"+i).innerHTML);
                     }
@@ -395,15 +409,14 @@ if(isset($_GET['quantity1']))
                     // document.getElementById("grand_total").innerHTML="₹"+sub_total;
                     // alert("rg");
                 let url=null;
-                for(var i=1;i<=<?php echo $i;?>;i++)
+                for(var i=1;i<=<?php echo json_encode($i);?>;i++)
                 {
                     if(i==1)
                         url="quantity"+i+"="+document.getElementById("quantity"+i).value+"&";
                     else
                         url+="quantity"+i+"="+document.getElementById("quantity"+i).value+"&";
                 }
-                window.location="cart.php?"+url+"<?php echo $url;?>count="+<?php echo $i;?>;
-                // alert(url+"<?php echo $url;?>count="+<?php echo $i;?>);
+                window.location="cart.php?"+url+<?php echo json_encode((string)$url);?>+"count="+<?php echo json_encode($i);?>;
                 return 1;
             }
             function checkout()

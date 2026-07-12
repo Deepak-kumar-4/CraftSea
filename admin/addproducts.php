@@ -12,7 +12,9 @@ if(isset($_GET['productname']))
       $image2="img/".$_GET['image2'];
       $image3="img/".$_GET['image3'];
       $specification=$_GET['specification'];
-      $result=mysqli_query($con,"INSERT INTO product(name,description,specification,brand,price,category,build_type,image1,image2,image3) values('$productname','$description','$specification','$brand','$price','$category','$buildtype','$image1','$image2','$image3')");
+      $stmt=mysqli_prepare($con,"INSERT INTO product(name,description,specification,brand,price,category,build_type,image1,image2,image3) values(?,?,?,?,?,?,?,?,?,?)");
+      mysqli_stmt_bind_param($stmt,"ssssisssss",$productname,$description,$specification,$brand,$price,$category,$buildtype,$image1,$image2,$image3);
+      mysqli_stmt_execute($stmt);
       $_GET['productname']=NULL;
       echo "<script>alert('Product Is Added Successfuly');</script>";
 }

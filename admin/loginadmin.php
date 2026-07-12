@@ -7,7 +7,9 @@ if(isset($_GET['logout']))
 }
 else if(isset($_POST['email']))
 {
-    if($_POST['email']=="Craftsea@Craftsea.com" && $_POST['password']=="Craftsea123")
+    $adminEmail = getenv('ADMIN_EMAIL') ?: "Craftsea@Craftsea.com";
+    $adminPassword = getenv('ADMIN_PASSWORD') ?: "Craftsea123";
+    if($_POST['email']==$adminEmail && $_POST['password']==$adminPassword)
     {
         $_SESSION['admin']="jerold";
         ?>

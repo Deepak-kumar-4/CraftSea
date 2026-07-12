@@ -16,24 +16,29 @@
         $price=NULL;
         $image=NULL;
         $customerID=$_SESSION['userid'];
-        $result=mysqli_query($con,"select * from product where product_id='$id'")
-        or die("Failed to login".mysql_error());
+        $stmt=mysqli_prepare($con,"select * from product where product_id=?");
+        mysqli_stmt_bind_param($stmt,"i",$id);
+        mysqli_stmt_execute($stmt);
+        $result=mysqli_stmt_get_result($stmt);
         while($row = mysqli_fetch_assoc($result))
         {
             $name=$row['name'];
             $price=$row['price'];
             $image=$row['image1'];
         }
-        $result=mysqli_query($con,"insert into cart (product_id,image,name,price,quantity,customer_id) values('$id','$image','$name','$price','$quantity','$customerID')")
-        or die("Failed to login".mysql_error());
-        $result=mysqli_query($con,"select * from cart where customer_id='$customerID'")
-        or die("Failed to login".mysql_error());
+        $stmt=mysqli_prepare($con,"insert into cart (product_id,image,name,price,quantity,customer_id) values(?,?,?,?,?,?)");
+        mysqli_stmt_bind_param($stmt,"issiii",$id,$image,$name,$price,$quantity,$customerID);
+        mysqli_stmt_execute($stmt);
+        $stmt=mysqli_prepare($con,"select * from cart where customer_id=?");
+        mysqli_stmt_bind_param($stmt,"i",$customerID);
+        mysqli_stmt_execute($stmt);
+        $result=mysqli_stmt_get_result($stmt);
         $_SESSION['cart']=mysqli_num_rows($result);
         if(!isset($_GET['location']))
         {
 ?>
             <script>
-                window.location="product-detail.php?product_id=<?php echo $id;?>";
+                window.location="product-detail.php?product_id="+<?php echo json_encode($id);?>;
             </script>
 <?php
         }

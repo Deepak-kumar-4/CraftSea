@@ -6,8 +6,10 @@
 
     //Query
     $id=$_GET['product_id'];
-    $result=mysqli_query($con,"select * from product where product_id='$id'")
-    or die("Failed to login".mysql_error());
+    $stmt=mysqli_prepare($con,"select * from product where product_id=?");
+    mysqli_stmt_bind_param($stmt,"i",$id);
+    mysqli_stmt_execute($stmt);
+    $result=mysqli_stmt_get_result($stmt);
     // $rows = mysqli_fetch_assoc($result);
 ?>
 <!DOCTYPE html>
@@ -141,16 +143,16 @@
                                     <div class="row align-items-center">
                                           <div class="col-md-5">
                                                 <div class="product-slider-single normal-slider">
-                                                      <img src="<?php echo $row['image1']; ?>" alt="Product Image">
+                                                      <img src="<?php echo htmlspecialchars($row['image1']); ?>" alt="Product Image">
                                                       <?php
                                                             if($row['image2']!="img/"){
                                                       ?>
-                                                      <img src="<?php echo $row['image2']; ?>" alt="Product Image">
+                                                      <img src="<?php echo htmlspecialchars($row['image2']); ?>" alt="Product Image">
                                                       <?php
                                                             }
                                                             if($row['image3']!="img/"){
                                                       ?>
-                                                      <img src="<?php echo $row['image3']; ?>" alt="Product Image">
+                                                      <img src="<?php echo htmlspecialchars($row['image3']); ?>" alt="Product Image">
                                                       <?php
                                                             }
                                                       ?>
@@ -159,18 +161,18 @@
                                                       <img src="img/Featured1.jpg" alt="Product Image"> -->
                                                 </div>
                                                 <div class="product-slider-single-nav normal-slider">
-                                                      <div class="slider-nav-img"><img src="<?php echo $row['image1']; ?>"
+                                                      <div class="slider-nav-img"><img src="<?php echo htmlspecialchars($row['image1']); ?>"
                                                                   alt="Product Image"></div>
                                                       <?php
                                                             if($row['image2']!="img/"){
                                                       ?>
-                                                      <div class="slider-nav-img"><img src="<?php echo $row['image2']; ?>"
+                                                      <div class="slider-nav-img"><img src="<?php echo htmlspecialchars($row['image2']); ?>"
                                                                   alt="Product Image"></div>
                                                       <?php
                                                             }
                                                             if($row['image3']!="img/"){
                                                       ?>
-                                                      <div class="slider-nav-img"><img src="<?php echo $row['image3']; ?>"
+                                                      <div class="slider-nav-img"><img src="<?php echo htmlspecialchars($row['image3']); ?>"
                                                                   alt="Product Image"></div>
                                                       <?php
                                                             }
@@ -186,7 +188,7 @@
                                           <div class="col-md-7">
                                                 <div class="product-content">
                                                       <div class="title">
-                                                            <h2> <?php echo $row['name']; ?></h2>
+                                                            <h2> <?php echo htmlspecialchars($row['name']); ?></h2>
                                                       </div>
                                                       <div class="ratting">
                                                             <i class="fa fa-star"></i>
@@ -197,7 +199,7 @@
                                                       </div>
                                                       <div class="price">
                                                             <h4>Price:</h4>
-                                                            <p>₹<?php echo $row['price']; ?><span>₹<?php echo ((int)$row['price']+300); ?></span></p>
+                                                            <p>₹<?php echo htmlspecialchars($row['price']); ?><span>₹<?php echo ((int)$row['price']+300); ?></span></p>
                                                       </div>
                                                       <div class="quantity">
                                                             <h4>Quantity:</h4>
@@ -220,7 +222,7 @@
                                                       <div class="action">
                                                             <!-- <a class="btn" href="addcart.php?product_id=<//?php echo $row['product_id']; ?>"><i
                                                                         class="fa fa-shopping-cart"></i>Add to Cart</a> -->
-                                                            <button class="btn" onclick="addcart(<?php echo $row['product_id']; ?>)"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                                                            <button class="btn" onclick="addcart(<?php echo json_encode((int)$row['product_id']); ?>)"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
                                                             <button class="btn"><i class="fa fa-shopping-bag"></i> Buy Now</button>
                                                       </div>
                                                 </div>
@@ -249,7 +251,7 @@
                                                       <h4>Product Description</h4>
                                                       <br>
                                                       <ul>
-                                                        <li><?php echo str_replace("\n","</li><li>",$row['description']); ?></li>
+                                                        <li><?php echo str_replace("\n","</li><li>",htmlspecialchars($row['description'])); ?></li>
                                                       <!-- <li>The oxidisation process creates a light and shadow effect in this jewellery.</li> -->
                                                       <!-- <li>The unique and antique look gives it an old charm and traditional appeal.</li>
                                                       <li>Complements both Indian and Western outfits.</li> -->
@@ -259,7 +261,7 @@
                                                       <h4>Pack Content & Dimensions</h4>
                                                       <br>
                                                       <ul>
-                                                            <li><?php echo str_replace("\n","</li><li>",$row['specification']); ?></li>
+                                                            <li><?php echo str_replace("\n","</li><li>",htmlspecialchars($row['specification'])); ?></li>
                                                             <!-- <li>Material: Oxidised Silver</li>
                                                             <li>Finish: Antique</li>
                                                             <li>Closure: Adjustable</li> -->

@@ -225,9 +225,9 @@
                                                     ?>
                                                       <tr>
                                                             <th scope="row"><?php echo $j;?></th>
-                                                            <td><?php echo $row['customer_id'];?></td>
-                                                            <td><?php echo $row['name'];?>John</td>
-                                                            <td><?php echo $row['email'];?></td>
+                                                            <td><?php echo htmlspecialchars($row['customer_id']);?></td>
+                                                            <td><?php echo htmlspecialchars($row['name']);?>John</td>
+                                                            <td><?php echo htmlspecialchars($row['email']);?></td>
                                                       </tr>
                                                       <?php
                                                         }

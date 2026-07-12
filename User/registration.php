@@ -10,11 +10,14 @@
     $con=mysqli_connect("localhost","root","","Craftsea");
 
     //Query
+    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
     try{
-        $result=mysqli_query($con,"insert into customer (password,name,address,phone_no,email,dob) values('$password','$name','$address','$Mmbile','$email','$dob')");
+        $stmt = mysqli_prepare($con, "insert into customer (password,name,address,phone_no,email,dob) values(?,?,?,?,?,?)");
+        mysqli_stmt_bind_param($stmt, "sssiss", $passwordHash, $name, $address, $Mmbile, $email, $dob);
+        mysqli_stmt_execute($stmt);
     }catch(Exception $e)
     {
-        echo $e;
+        echo htmlspecialchars($e->getMessage());
     }
     
 

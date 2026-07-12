@@ -258,9 +258,9 @@ session_start();
                                     <div class="checkout-summary">
                                           <h1>Cart Total</h1>
                                           <!-- <p>Product Name<span>$99</span></p> -->
-                                          <p class="sub-total">Sub Total<span><?php echo $_GET['SubTotal'];?></span></p>
-                                          <p class="ship-cost">Shipping Cost<span><?php echo $_GET['Shipping_Cost'];?></span></p>
-                                          <h2>Grand Total<span><?php echo $_GET['Grand_Total'];?></span></h2>
+                                          <p class="sub-total">Sub Total<span><?php echo htmlspecialchars($_GET['SubTotal']);?></span></p>
+                                          <p class="ship-cost">Shipping Cost<span><?php echo htmlspecialchars($_GET['Shipping_Cost']);?></span></p>
+                                          <h2>Grand Total<span><?php echo htmlspecialchars($_GET['Grand_Total']);?></span></h2>
                                     </div>
 
                                     <div class="checkout-payment">

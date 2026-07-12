@@ -3,7 +3,9 @@ $con=mysqli_connect("localhost","root","","Craftsea");
 if(isset($_GET['product_id']))
 {
       $product_id=$_GET['product_id'];
-      $delete=mysqli_query($con,"DELETE FROM PRODUCT WHERE product_id='$product_id'");
+      $stmt=mysqli_prepare($con,"DELETE FROM PRODUCT WHERE product_id=?");
+      mysqli_stmt_bind_param($stmt,"i",$product_id);
+      mysqli_stmt_execute($stmt);
 }
 ?>
 <!DOCTYPE html>
@@ -237,16 +239,16 @@ if(isset($_GET['product_id']))
                                                     ?>
                                                       <tr>
                                                             <!-- <td><?php echo $row['product_id'];?></td> -->
-                                                            <td><image src="<?php echo "../".$row['image1'];?>" style="width: 80px;"></td>
-                                                            <td><?php echo $row['name'];?></td>
+                                                            <td><image src="<?php echo "../".htmlspecialchars($row['image1']);?>" style="width: 80px;"></td>
+                                                            <td><?php echo htmlspecialchars($row['name']);?></td>
                                                             <!-- <td><?php echo $row['category'];?></td> -->
                                                             <!-- <td><?php echo $row['brand'];?></td> -->
-                                                            <td><?php echo $row['description'];?></td>
+                                                            <td><?php echo htmlspecialchars($row['description']);?></td>
                                                             <!-- <td><?php echo $row['specification'];?></td> -->
-                                                            <td><?php echo $row['price'];?></td>
+                                                            <td><?php echo htmlspecialchars($row['price']);?></td>
                                                             <!-- <td><?php echo $row['build_type'];?></td> -->
-                                                            <td><a class="btn btn-sm btn-primary" href="productdetails.php?product_id=<?php echo $row['product_id'];?>">Delete</a></td>
-                                                            <td><a class="btn btn-sm btn-primary" href="editeproduct.php?product_id=<?php echo $row['product_id'];?>">Edit</a></td>
+                                                            <td><a class="btn btn-sm btn-primary" href="productdetails.php?product_id=<?php echo htmlspecialchars($row['product_id']);?>">Delete</a></td>
+                                                            <td><a class="btn btn-sm btn-primary" href="editeproduct.php?product_id=<?php echo htmlspecialchars($row['product_id']);?>">Edit</a></td>
                                                       </tr>
                                                       <?php
                                                         }

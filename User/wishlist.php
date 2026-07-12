@@ -15,9 +15,13 @@ $customerID=$_SESSION['userid'];
 if(isset($_GET['id']))
 {
     $id=$_GET['id'];
-    $delet=mysqli_query($con,"delete from wishlist where product_id='$id'");
-    $result=mysqli_query($con,"select * from wishlist where customer_id='$customerID'")
-    or die("Failed to login".mysql_error());
+    $stmt=mysqli_prepare($con,"delete from wishlist where product_id=?");
+    mysqli_stmt_bind_param($stmt,"i",$id);
+    mysqli_stmt_execute($stmt);
+    $stmt=mysqli_prepare($con,"select * from wishlist where customer_id=?");
+    mysqli_stmt_bind_param($stmt,"i",$customerID);
+    mysqli_stmt_execute($stmt);
+    $result=mysqli_stmt_get_result($stmt);
     $_SESSION['wishlist']=mysqli_num_rows($result);
 }
 if(isset($_POST['wish_add']))
@@ -27,22 +31,29 @@ if(isset($_POST['wish_add']))
     $name=NULL;
     $price=NULL;
     $image=NULL;
-    $result=mysqli_query($con,"select * from product where product_id='$id'")
-    or die("Failed to login".mysql_error());
+    $stmt=mysqli_prepare($con,"select * from product where product_id=?");
+    mysqli_stmt_bind_param($stmt,"i",$id);
+    mysqli_stmt_execute($stmt);
+    $result=mysqli_stmt_get_result($stmt);
     while($row = mysqli_fetch_assoc($result))
     {
         $name=$row['name'];
         $price=$row['price'];
         $image=$row['image1'];
     }
-    $result=mysqli_query($con,"insert into cart (product_id,image,name,price,quantity,customer_id) values('$id','$image','$name','$price','$quantity','$customerID')")
-    or die("Failed to login".mysql_error());
-    $result=mysqli_query($con,"select * from cart where customer_id='$customerID'")
-    or die("Failed to login".mysql_error());
+    $stmt=mysqli_prepare($con,"insert into cart (product_id,image,name,price,quantity,customer_id) values(?,?,?,?,?,?)");
+    mysqli_stmt_bind_param($stmt,"issiii",$id,$image,$name,$price,$quantity,$customerID);
+    mysqli_stmt_execute($stmt);
+    $stmt=mysqli_prepare($con,"select * from cart where customer_id=?");
+    mysqli_stmt_bind_param($stmt,"i",$customerID);
+    mysqli_stmt_execute($stmt);
+    $result=mysqli_stmt_get_result($stmt);
     $_SESSION['cart']=mysqli_num_rows($result);
 }
-$result=mysqli_query($con,"select * from wishlist where customer_id='$customerID'")
-or die("Failed to login".mysql_error());
+$stmt=mysqli_prepare($con,"select * from wishlist where customer_id=?");
+mysqli_stmt_bind_param($stmt,"i",$customerID);
+mysqli_stmt_execute($stmt);
+$result=mysqli_stmt_get_result($stmt);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -171,7 +182,7 @@ or die("Failed to login".mysql_error());
                                         while($row = mysqli_fetch_assoc($result))
                                         {
                                             ?>
-                                        <form action="wishlist.php?id=<?php echo $row['product_id'];?>" method="post">
+                                        <form action="wishlist.php?id=<?php echo htmlspecialchars($row['product_id']);?>" method="post">
                                           <table class="table table-bordered">
                                                 <!-- <thead class="thead-dark">
                                                       <tr>
@@ -185,14 +196,14 @@ or die("Failed to login".mysql_error());
                                                       <tr>
                                                             <td>
                                                                   <div class="img">
-                                                                        <a href="#"><img src="<?php echo $row['image'];?>"
+                                                                        <a href="#"><img src="<?php echo htmlspecialchars($row['image']);?>"
                                                                                     alt="Image"></a>
-                                                                        <p><?php echo $row['name'];?></p>
+                                                                        <p><?php echo htmlspecialchars($row['name']);?></p>
                                                                   </div>
                                                             </td>
-                                                            <td>$<?php echo $row['price'];?></td>
+                                                            <td>$<?php echo htmlspecialchars($row['price']);?></td>
                                                             <td><button name="wish_add" class="btn-cart">Add to Cart</button></td>
-                                                            <td><a href="wishlist.php?id=<?php echo $row['product_id'];?>"><button><i class="fa fa-trash"></i></button></a></td>
+                                                            <td><a href="wishlist.php?id=<?php echo htmlspecialchars($row['product_id']);?>"><button><i class="fa fa-trash"></i></button></a></td>
                                                       </tr>
                                                 </tbody>
                                           </table>
