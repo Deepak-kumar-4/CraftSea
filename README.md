@@ -1,6 +1,6 @@
 # CraftSea 🛍️
 
-A full-stack e-commerce platform for handmade crafts, built with PHP and MySQL — featuring a complete customer storefront and an independent admin back-office for managing products, orders, and shipping.
+A full-stack e-commerce platform for handmade crafts, built using PHP and MySQL, featuring a complete customer storefront and a dedicated administrative back-office for managing products, orders, and inventory.
 
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
@@ -24,7 +24,7 @@ A full-stack e-commerce platform for handmade crafts, built with PHP and MySQL �
 
 ---
 
-## 🧩 Overview
+## 🧩 Project Overview
 
 CraftSea is an online craft store offering a wide range of handmade crafting supplies. Customers can browse products, manage a cart and wishlist, check out, and track orders — while a separate admin panel handles inventory, order fulfillment, and sales reporting.
 
@@ -32,6 +32,12 @@ The project is split into two independent applications sharing the same database
 
 - **`User/`** — the customer-facing storefront
 - **`admin/`** — the back-office management panel
+
+---
+
+## 💡 Motivation
+
+CraftSea was developed to simulate a complete e-commerce ecosystem for handmade crafts. The goal was to gain practical experience in designing customer-facing shopping workflows, secure authentication, database-driven applications, and an administrative management system within a full-stack architecture.
 
 ---
 
@@ -48,7 +54,7 @@ The project is split into two independent applications sharing the same database
 **Admin Panel**
 
 - Dashboard with order, sales, and revenue visualization
-- Full product CRUD (add, edit, delete, with multi-image support)
+- Complete product lifecycle management (Create, Read, Update, Delete)
 - Order status management and shipping address lookup
 - Registered customer and newsletter subscriber views
 - Sales reporting
@@ -67,7 +73,31 @@ The project is split into two independent applications sharing the same database
 
 ---
 
-## 🔐 Security Hardening
+## 🏛️ System Components
+
+The application is divided into two independent modules that share a common database:
+
+- **Customer Module** – Product browsing, authentication, cart, wishlist, checkout, and order management.
+- **Admin Module** – Product management, order processing, customer management, and sales reporting.
+- **Database Layer** – Centralized MySQL database storing products, customers, orders, and newsletters.
+- **Authentication Layer** – Session-based authentication with bcrypt password hashing and secure credential management.
+
+---
+
+## 🎯 Key Learning Outcomes
+
+Through this project, I gained practical experience in:
+
+- Building complete full-stack web applications
+- Designing relational databases
+- Implementing secure authentication and authorization
+- Preventing SQL Injection and XSS attacks
+- Developing administrative dashboards
+- Managing customer and order workflows
+
+---
+
+## 🔐 Security & Best Practices
 
 This codebase went through a dedicated security audit and hardening pass:
 
@@ -79,7 +109,33 @@ This codebase went through a dedicated security audit and hardening pass:
 
 ---
 
+## 📈 Design Considerations
+
+- Modular separation between customer and admin modules
+- Database normalization for product and order management
+- Prepared statements for secure database operations
+- Environment-based configuration for sensitive credentials
+- Bootstrap-based responsive UI for cross-device compatibility
+
+---
+
 ## 📐 System Design
+
+**High-Level Architecture Diagram**
+
+flowchart LR
+
+Customer --> Storefront
+
+Storefront --> PHP
+
+PHP --> MySQL
+
+Admin --> AdminPanel
+
+AdminPanel --> PHP
+
+PHP --> MySQL
 
 **Entity-Relationship Diagram**
 
@@ -117,7 +173,7 @@ Admin authentication is environment-variable based (`ADMIN_EMAIL` / `ADMIN_PASSW
 
 ## 📸 Screenshots
 
-### User Module
+### 🛍️ Customer Storefront - User Module
 
 ![Home Page](assets/screenshots/user/home-page.png)
 _Home page_
@@ -152,7 +208,7 @@ _Contact form_
 ![About Us](assets/screenshots/user/about-us.png)
 _About page_
 
-### Admin Module
+### 🛠️ Admin Panel - Admin Module
 
 ![Admin Dashboard](assets/screenshots/admin/dashboard.png)
 _Orders, sales, and revenue visualization_
@@ -243,13 +299,13 @@ A demo customer account is seeded in the database for testing:
 
 ---
 
-## ⚠️ Known Limitations
+## 🚀 Future Roadmap
 
-- No real payment gateway integration — checkout collects shipping/billing details but doesn't process live payments
-- No automated email/SMS notifications for order status changes
-- No inventory/stock quantity tracking per product
-- No product reviews or ratings system
-- No automated test suite (unit/integration tests)
+- 💳 Payment Gateway Integration
+- 📧 Real-Time Email & SMS Notifications
+- 📦 Inventory & Stock Management
+- 🔌 REST API for Mobile & Third-Party Integration
+- 🐳 Docker & Cloud Deployment
 
 ---
 
