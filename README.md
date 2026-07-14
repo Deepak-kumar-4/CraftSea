@@ -123,19 +123,17 @@ This codebase went through a dedicated security audit and hardening pass:
 
 **High-Level Architecture Diagram**
 
+```mermaid
 flowchart LR
-
-Customer --> Storefront
-
-Storefront --> PHP
-
-PHP --> MySQL
-
-Admin --> AdminPanel
-
-AdminPanel --> PHP
-
-PHP --> MySQL
+    A[CCTV Feed] --> B[OpenCV Frame Processing]
+    B --> C[YOLO / MobileNet-SSD]
+    C --> D{Human Detected?}
+    D -->|Yes| E[SQLite]
+    E --> F[SMTP Email]
+    E --> G[Twilio SMS]
+    E --> H[Flask Dashboard]
+    D -->|No| I[Continue Monitoring]
+```
 
 **Entity-Relationship Diagram**
 
@@ -301,11 +299,11 @@ A demo customer account is seeded in the database for testing:
 
 ## 🚀 Future Roadmap
 
-- 💳 Payment Gateway Integration
-- 📧 Real-Time Email & SMS Notifications
-- 📦 Inventory & Stock Management
-- 🔌 REST API for Mobile & Third-Party Integration
-- 🐳 Docker & Cloud Deployment
+- Payment Gateway Integration
+- Real-Time Notifications
+- Inventory Management
+- REST API Support
+- Docker Deployment
 
 ---
 
