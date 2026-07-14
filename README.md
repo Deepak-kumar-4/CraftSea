@@ -25,7 +25,7 @@ A full-stack e-commerce platform for handmade crafts, built using PHP and MySQL,
 
 ---
 
-## 🧩 Project Overview
+## 🧩 Overview
 
 CraftSea is an online craft store offering a wide range of handmade crafting supplies. Customers can browse products, manage a cart and wishlist, check out, and track orders — while a separate admin panel handles inventory, order fulfillment, and sales reporting.
 
