@@ -5,7 +5,6 @@ A full-stack e-commerce platform for handmade crafts, built using PHP and MySQL,
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=flat-square&logo=bootstrap&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ---
 
