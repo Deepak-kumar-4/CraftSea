@@ -14,12 +14,13 @@ A full-stack e-commerce platform for handmade crafts, built using PHP and MySQL,
 - [Overview](#-overview)
 - [Key Features](#-key-features)
 - [Tech Stack](#-tech-stack)
-- [Security Hardening](#-security-hardening)
+- [System Components](#-system-components)
+- [Security & Best Practices](#-security--best-practices)
 - [System Design](#-system-design)
 - [Screenshots](#-screenshots)
 - [Project Structure](#-project-structure)
 - [Getting Started](#-getting-started)
-- [Known Limitations](#-known-limitations)
+- [Future Roadmap](#-future-roadmap)
 - [Author](#-author)
 
 ---
@@ -313,7 +314,7 @@ A demo customer account is seeded in the database for testing:
 
 ## 👤 Author
 
-**Deepak Kumar B**
+**Deepak Kumar B**<br>
 Full Stack Developer | MCA, St Joseph's University
 
 [GitHub](https://github.com/Deepak-kumar-4) · [LinkedIn](https://linkedin.com/in/deepak-kumar-b-dee412)
