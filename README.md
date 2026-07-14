@@ -125,14 +125,18 @@ This codebase went through a dedicated security audit and hardening pass:
 
 ```mermaid
 flowchart LR
-    A[CCTV Feed] --> B[OpenCV Frame Processing]
-    B --> C[YOLO / MobileNet-SSD]
-    C --> D{Human Detected?}
-    D -->|Yes| E[SQLite]
-    E --> F[SMTP Email]
-    E --> G[Twilio SMS]
-    E --> H[Flask Dashboard]
-    D -->|No| I[Continue Monitoring]
+
+Customer --> Storefront
+
+Storefront --> PHP
+
+PHP --> MySQL
+
+Admin --> AdminPanel
+
+AdminPanel --> PHP
+
+PHP --> MySQL
 ```
 
 **Entity-Relationship Diagram**
